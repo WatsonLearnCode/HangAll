@@ -1,4 +1,4 @@
-<p align="center">
+﻿﻿<p align="center">
   <img src="docs/icon.png" width="96" height="96" alt="HangAll">
 </p>
 
@@ -27,13 +27,13 @@
 
 ## Download and install
 
-Download the latest `v1.0.0` release from [GitHub Releases](https://github.com/WatsonLearnCode/HangAll/releases). The release contains:
+Download the latest release (currently `v1.0.1`) from [GitHub Releases](https://github.com/WatsonLearnCode/HangAll/releases). The release contains:
 
 | File | Purpose | .NET 8 Desktop Runtime |
 |:--|:--|:--|
-| `HangAll-1.0.0-Setup.exe` | Installer for install, upgrade and uninstall flows | Required |
-| `HangAll-1.0.0-win-x64.exe` | Framework-dependent single-file build | Required |
-| `HangAll-1.0.0-win-x64-portable.exe` | Self-contained portable build | Not required |
+| `HangAll-<版本>-Setup.exe` | Installer for install, upgrade and uninstall flows | Required |
+| `HangAll-<版本>-win-x64.exe` | Framework-dependent single-file build | Required |
+| `HangAll-<版本>-win-x64-portable.exe` | Self-contained portable build | Not required |
 | `SHA256SUMS.txt` | SHA256 checksums for all release binaries | N/A |
 
 The installer defaults to `%LOCALAPPDATA%\Programs\HangAll` and does not require administrator access. Its license page supports English, Simplified Chinese, Traditional Chinese, Japanese and Korean.
@@ -43,7 +43,7 @@ The installer defaults to `%LOCALAPPDATA%\Programs\HangAll` and does not require
 The current release binaries are not code-signed. Windows SmartScreen may show a warning. Verify the downloaded file against `SHA256SUMS.txt` before running it:
 
 ```powershell
-Get-FileHash .\HangAll-1.0.0-Setup.exe -Algorithm SHA256
+Get-FileHash .\HangAll-<版本>-Setup.exe -Algorithm SHA256
 Get-Content .\SHA256SUMS.txt
 ```
 
@@ -98,16 +98,16 @@ Requirements:
 From the repository root:
 
 ```powershell
-scripts\build.ps1 -Version 1.0.0
-scripts\build.ps1 -Version 1.0.0 -Installer
-scripts\build.ps1 -Portable -Version 1.0.0
+scripts\build.ps1 -Version 1.0.1
+scripts\build.ps1 -Version 1.0.1 -Installer
+scripts\build.ps1 -Portable -Version 1.0.1
 ```
 
 Outputs:
 
 - `dist\win-x64\HangAll.exe`: framework-dependent single-file build
 - `dist\portable\HangAll.exe`: self-contained portable build
-- `dist\HangAll-1.0.0-Setup.exe`: installer
+- `dist\HangAll-1.0.1-Setup.exe`: installer
 
 The release workflow is in [`.github/workflows/release.yml`](.github/workflows/release.yml). A `v*` tag builds every release file, fails if a required file is missing, and generates `SHA256SUMS.txt`.
 

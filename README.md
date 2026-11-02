@@ -1,4 +1,4 @@
-<p align="center">
+﻿﻿<p align="center">
   <img src="docs/icon.png" width="96" height="96" alt="HangAll">
 </p>
 
@@ -27,13 +27,13 @@
 
 ## 下载与安装
 
-请从 [GitHub Releases](https://github.com/WatsonLearnCode/HangAll/releases) 下载 `v1.0.0` 或更新版本。每个版本包含以下文件：
+请从 [GitHub Releases](https://github.com/WatsonLearnCode/HangAll/releases) 下载最新版本（当前 `v1.0.1`）。每个版本包含以下文件：
 
 | 文件 | 用途 | 是否需要 .NET 8 Desktop Runtime |
 |:--|:--|:--|
-| `HangAll-1.0.0-Setup.exe` | 安装版，推荐使用；可按向导安装、升级和卸载 | 是 |
-| `HangAll-1.0.0-win-x64.exe` | 框架依赖的单文件版，适合已有的 .NET 8 环境 | 是 |
-| `HangAll-1.0.0-win-x64-portable.exe` | 自包含便携版，可直接运行 | 否 |
+| `HangAll-<版本>-Setup.exe` | 安装版，推荐使用；可按向导安装、升级和卸载 | 是 |
+| `HangAll-<版本>-win-x64.exe` | 框架依赖的单文件版，适合已有的 .NET 8 环境 | 是 |
+| `HangAll-<版本>-win-x64-portable.exe` | 自包含便携版，可直接运行 | 否 |
 | `SHA256SUMS.txt` | 三个发行文件的 SHA256 校验值 | 不适用 |
 
 安装版默认安装到 `%LOCALAPPDATA%\Programs\HangAll`，不要求管理员权限。当前安装器的许可证页面支持简体中文、繁体中文、英文、日文和韩文，并会随程序安装根许可证、第三方声明和 Manrope 字体许可证。
@@ -45,7 +45,7 @@
 在 PowerShell 中可这样校验：
 
 ```powershell
-Get-FileHash .\HangAll-1.0.0-Setup.exe -Algorithm SHA256
+Get-FileHash .\HangAll-<版本>-Setup.exe -Algorithm SHA256
 Get-Content .\SHA256SUMS.txt
 ```
 
@@ -103,16 +103,16 @@ Add-WindowsCapability -Online -Name Language.OCR~~~en-US
 在仓库根目录执行：
 
 ```powershell
-scripts\build.ps1 -Version 1.0.0
-scripts\build.ps1 -Version 1.0.0 -Installer
-scripts\build.ps1 -Portable -Version 1.0.0
+scripts\build.ps1 -Version 1.0.1
+scripts\build.ps1 -Version 1.0.1 -Installer
+scripts\build.ps1 -Portable -Version 1.0.1
 ```
 
 输出文件：
 
 - `dist\win-x64\HangAll.exe`：框架依赖单文件版
 - `dist\portable\HangAll.exe`：自包含便携版
-- `dist\HangAll-1.0.0-Setup.exe`：安装包
+- `dist\HangAll-1.0.1-Setup.exe`：安装包
 
 发布流程位于 [`.github/workflows/release.yml`](.github/workflows/release.yml)。推送 `v*` 标签后，工作流会构建全部文件、检查文件是否存在并生成 `SHA256SUMS.txt`。
 

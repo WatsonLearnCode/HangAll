@@ -194,12 +194,12 @@ public sealed class SettingsWindow : Window
         Closed += (_, _) => Updater.Changed -= OnUpdaterChanged;
     }
 
-    /// <summary>A check finished on a background thread; bring the row up to date on ours.</summary>
+    /// <summary>
+    /// Raised on the thread that ran the check. Nothing here may touch a control
+    /// or a dependency property first: the dispatcher does that on our thread.
+    /// </summary>
     private void OnUpdaterChanged()
-    {
-        if (!IsLoaded || _updateStatus is null) return;
-        Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(RefreshUpdateRow));
-    }
+        => Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(RefreshUpdateRow));
 
     /// <summary>The last section: what this build is, and the one button that asks GitHub.</summary>
     private Grid BuildUpdateSection()
@@ -208,7 +208,7 @@ public sealed class SettingsWindow : Window
         var (section, body) = Section(
             Strings.SettingsSectionUpdate,
             SettingsCategory.AppSettings,
-            SettingsGlyph.PowerFeedback);
+            SettingsGlyph.UpdateCheck);
 
         var version = Text(
             string.Format(Strings.UpdateCurrent, Updater.CurrentVersion),
@@ -309,15 +309,17 @@ public sealed class SettingsWindow : Window
     }
 
     /// <summary>The one button: ask GitHub, or open the release page once one is known.</summary>
-    private void StartUpdateCheck()
+    private async void StartUpdateCheck()
     {
         if (Updater.State == Updater.Status.Available && Updater.Found is not null)
         {
             Updater.OpenPage();
             return;
         }
-        // Fire and forget: the row follows Updater.Changed when the answer lands.
-        _ = Updater.CheckAsync();
+        RefreshUpdateRow();
+        // Wait here as well, so the row is repainted on this thread even if the
+        // Updater.Changed notification is missed.
+        await Updater.CheckAsync();
         RefreshUpdateRow();
     }
 

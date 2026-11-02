@@ -145,7 +145,16 @@ public static class Updater
         finally
         {
             _running = false;
-            Changed?.Invoke();
+            try
+            {
+                Changed?.Invoke();
+            }
+            catch (Exception e)
+            {
+                // A subscriber that throws must not make the check itself fail;
+                // the answer is already in State for the next reader.
+                Log.Error($"An update subscriber failed: {e}");
+            }
         }
     }
 
