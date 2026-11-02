@@ -84,6 +84,15 @@ Uiverse.io, https://github.com/uiverse-io/galaxy). No code, stylesheet or
 artwork from it is used: the effects are implemented independently in WPF, and
 nothing in this repository is derived from it.
 
+Inno Setup translations
+-----------------------
+The installer's Chinese (Simplified and Traditional), Japanese and Korean
+message files under installer/languages/ are taken from the Inno Setup source
+tree (https://github.com/jrsoftware/issrc, Files/Languages). Inno Setup is
+Copyright (C) 1997-2025 Jordan Russell and Martijn Laan and is distributed
+under the Inno Setup License; the translations are contributed by their
+respective translators. They are bundled so the installer builds the same way
+with Inno Setup 6, which ships no Chinese messages, and Inno Setup 7, which does.
 Windows, Microsoft Edge and other system marks
 ----------------------------------------------
 HangAll runs on Windows and draws its own chrome in the style of Windows 11.

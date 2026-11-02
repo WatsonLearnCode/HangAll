@@ -47,11 +47,13 @@ MinVersion=10.0.17763
 AppMutex=Local\HangAll.V1.SingleInstance
 
 [Languages]
+; The four translations ship with the repository: Inno Setup 6 does not bundle
+; the Chinese ones, and Inno Setup 7 does, so a local copy keeps both builds equal.
 Name: "english"; MessagesFile: "compiler:Default.isl"; LicenseFile: "..\LICENSE"
-Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"; LicenseFile: "..\licenses\LICENSE.zh-CN.txt"
-Name: "chinesetraditional"; MessagesFile: "compiler:Languages\ChineseTraditional.isl"; LicenseFile: "..\licenses\LICENSE.zh-Hant.txt"
-Name: "japanese"; MessagesFile: "compiler:Languages\Japanese.isl"; LicenseFile: "..\licenses\LICENSE.ja-JP.txt"
-Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"; LicenseFile: "..\licenses\LICENSE.ko-KR.txt"
+Name: "chinesesimplified"; MessagesFile: "languages\ChineseSimplified.isl"; LicenseFile: "..\licenses\LICENSE.zh-CN.txt"
+Name: "chinesetraditional"; MessagesFile: "languages\ChineseTraditional.isl"; LicenseFile: "..\licenses\LICENSE.zh-Hant.txt"
+Name: "japanese"; MessagesFile: "languages\Japanese.isl"; LicenseFile: "..\licenses\LICENSE.ja-JP.txt"
+Name: "korean"; MessagesFile: "languages\Korean.isl"; LicenseFile: "..\licenses\LICENSE.ko-KR.txt"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked

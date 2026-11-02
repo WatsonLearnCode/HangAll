@@ -31,8 +31,12 @@ jobs:
         shell: pwsh
         run: |
           $v = if ($env:GITHUB_REF -like "refs/tags/v*") { $env:GITHUB_REF.Substring(11) } else { "0.0.0" }
+          # Each build must be checked: with pwsh a failing first command would
+          # otherwise be hidden by the exit code of the second one.
           scripts/build.ps1 -Installer -Version $v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           scripts/build.ps1 -Portable -Version $v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Collect release files
         shell: pwsh
