@@ -98,7 +98,7 @@ Add-WindowsCapability -Online -Name Language.OCR~~~en-US
 
 - Windows 10 1809 或更高版本，或 Windows 11，x64
 - .NET 8 SDK
-- 如需生成安装包，安装 Inno Setup 6 或 7（CI 使用 7.1.0）
+- 如需生成安装包，安装 Inno Setup 6 或 7（CI 使用 6.7.1）
 
 在仓库根目录执行：
 

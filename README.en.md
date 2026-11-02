@@ -93,7 +93,7 @@ Requirements:
 
 - Windows 10 version 1809 or later, or Windows 11, x64
 - .NET 8 SDK
-- Inno Setup 6 or 7 when building the installer (CI uses 7.1.0)
+- Inno Setup 6 or 7 when building the installer (CI uses 6.7.1)
 
 From the repository root:
 

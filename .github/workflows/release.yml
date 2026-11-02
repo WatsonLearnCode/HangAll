@@ -23,7 +23,9 @@ jobs:
       - name: Install Inno Setup
         shell: pwsh
         run: |
-          choco install innosetup --version=7.1.0 --yes --no-progress
+          # Chocolatey publishes Inno Setup 6.x only (7.x has no package yet), and
+          # the pinned version is what build.ps1 finds under Program Files (x86).
+          choco install innosetup --version=6.7.1 --yes --no-progress
 
       - name: Build
         shell: pwsh
