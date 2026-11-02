@@ -52,7 +52,21 @@ if ($Installer) {
     if ($Portable) { $sourceDir = Join-Path $dist "portable" }
     if (-not (Test-Path (Join-Path $sourceDir "HangAll.exe"))) { Write-Error "Build HangAll.exe first"; exit 1 }
     $ver = if ($Version) { $Version } else { ([xml](Get-Content $proj)).Project.PropertyGroup.Version | Select-Object -First 1 }
-    & $iscc (Join-Path $root 'installer\hangall.iss') "/DVersion=$ver" "/DSource=$sourceDir" /Q
-    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    Write-Host "Built $(Join-Path $dist "HangAll-$ver-Setup.exe")"
+    $script = Join-Path $root 'installer\hangall.iss'
+    Write-Host "Inno Setup: $iscc"
+    Write-Host "Compiling $script with /DVersion=$ver /DSource=$sourceDir"
+    & $iscc $script "/DVersion=$ver" "/DSource=$sourceDir" /Q
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "::error::ISCC exited with $LASTEXITCODE"
+        exit $LASTEXITCODE
+    }
+    $setup = Join-Path $dist "HangAll-$ver-Setup.exe"
+    if (-not (Test-Path -LiteralPath $setup)) {
+        # ISCC can succeed while writing somewhere else; say where the output went.
+        $found = @(Get-ChildItem -Recurse -File $dist -Filter '*Setup*.exe' -ErrorAction SilentlyContinue)
+        $listing = if ($found.Count -gt 0) { ($found | ForEach-Object { $_.FullName }) -join ', ' } else { 'nothing' }
+        Write-Host "::error::Expected $setup but the compiler produced: $listing"
+        throw "Inno Setup did not write $setup"
+    }
+    Write-Host "Built $setup"
 }
