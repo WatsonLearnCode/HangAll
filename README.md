@@ -1,4 +1,4 @@
-﻿﻿<p align="center">
+﻿﻿﻿<p align="center">
   <img src="docs/icon.png" width="96" height="96" alt="HangAll">
 </p>
 
@@ -27,7 +27,7 @@
 
 ## 下载与安装
 
-请从 [GitHub Releases](https://github.com/WatsonLearnCode/HangAll/releases) 下载最新版本（当前 `v1.0.1`）。每个版本包含以下文件：
+请从 [GitHub Releases](https://github.com/WatsonLearnCode/HangAll/releases) 下载最新版本。每个版本包含以下文件：
 
 | 文件 | 用途 | 是否需要 .NET 8 Desktop Runtime |
 |:--|:--|:--|
@@ -103,16 +103,16 @@ Add-WindowsCapability -Online -Name Language.OCR~~~en-US
 在仓库根目录执行：
 
 ```powershell
-scripts\build.ps1 -Version 1.0.1
-scripts\build.ps1 -Version 1.0.1 -Installer
-scripts\build.ps1 -Portable -Version 1.0.1
+scripts\build.ps1 -Version 1.0.0
+scripts\build.ps1 -Version 1.0.0 -Installer
+scripts\build.ps1 -Portable -Version 1.0.0
 ```
 
 输出文件：
 
 - `dist\win-x64\HangAll.exe`：框架依赖单文件版
 - `dist\portable\HangAll.exe`：自包含便携版
-- `dist\HangAll-1.0.1-Setup.exe`：安装包
+- `dist\HangAll-1.0.0-Setup.exe`：安装包
 
 发布流程位于 [`.github/workflows/release.yml`](.github/workflows/release.yml)。推送 `v*` 标签后，工作流会构建全部文件、检查文件是否存在并生成 `SHA256SUMS.txt`。
 

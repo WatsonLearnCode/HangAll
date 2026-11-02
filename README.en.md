@@ -1,4 +1,4 @@
-﻿﻿<p align="center">
+﻿﻿﻿<p align="center">
   <img src="docs/icon.png" width="96" height="96" alt="HangAll">
 </p>
 
@@ -27,7 +27,7 @@
 
 ## Download and install
 
-Download the latest release (currently `v1.0.1`) from [GitHub Releases](https://github.com/WatsonLearnCode/HangAll/releases). The release contains:
+Download the latest release from [GitHub Releases](https://github.com/WatsonLearnCode/HangAll/releases). The release contains:
 
 | File | Purpose | .NET 8 Desktop Runtime |
 |:--|:--|:--|
@@ -98,16 +98,16 @@ Requirements:
 From the repository root:
 
 ```powershell
-scripts\build.ps1 -Version 1.0.1
-scripts\build.ps1 -Version 1.0.1 -Installer
-scripts\build.ps1 -Portable -Version 1.0.1
+scripts\build.ps1 -Version 1.0.0
+scripts\build.ps1 -Version 1.0.0 -Installer
+scripts\build.ps1 -Portable -Version 1.0.0
 ```
 
 Outputs:
 
 - `dist\win-x64\HangAll.exe`: framework-dependent single-file build
 - `dist\portable\HangAll.exe`: self-contained portable build
-- `dist\HangAll-1.0.1-Setup.exe`: installer
+- `dist\HangAll-1.0.0-Setup.exe`: installer
 
 The release workflow is in [`.github/workflows/release.yml`](.github/workflows/release.yml). A `v*` tag builds every release file, fails if a required file is missing, and generates `SHA256SUMS.txt`.
 
