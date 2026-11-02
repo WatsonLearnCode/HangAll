@@ -1,0 +1,46 @@
+# Build output
+bin/
+obj/
+dist/
+out/
+out-mac/
+Installed/
+qa/
+output/
+backup/
+macos/.build/
+macos/build/
+
+# Brand artwork that scripts/make-brand.ps1 regenerates on every build
+/design/
+/docs/logo-512.png
+/docs/social.png
+/src/HangAll/Assets/AppIcon/
+/src/HangAll/Assets/Logo/
+/installer/wizard.bmp
+/installer/wizard-small.bmp
+
+# Local artifacts
+/HangAll.exe
+/HangAll.exe.bak-*
+*.bak-*
+*.log
+/.qa-*/
+/.qa-*.txt
+/--*/
+/--note-*
+
+# IDE and user settings
+.vs/
+.idea/
+*.user
+*.suo
+
+# Certificates and secrets
+*.pfx
+*.p12
+*.snk
+
+# OS metadata
+.DS_Store
+Thumbs.db

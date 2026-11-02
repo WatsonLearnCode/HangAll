@@ -1,0 +1,97 @@
+# Build HangAll on Windows and publish the application and installer.
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup --version=7.1.0 --yes --no-progress
+
+      - name: Build
+        shell: pwsh
+        run: |
+          $v = if ($env:GITHUB_REF -like "refs/tags/v*") { $env:GITHUB_REF.Substring(11) } else { "0.0.0" }
+          scripts/build.ps1 -Installer -Version $v
+          scripts/build.ps1 -Portable -Version $v
+
+      - name: Collect release files
+        shell: pwsh
+        run: |
+          $v = if ($env:GITHUB_REF -like 'refs/tags/v*') { $env:GITHUB_REF.Substring(11) } else { '0.0.0' }
+          $files = @(
+            @{ Source = "dist/win-x64/HangAll.exe"; Name = "HangAll-$v-win-x64.exe" },
+            @{ Source = "dist/portable/HangAll.exe"; Name = "HangAll-$v-win-x64-portable.exe" },
+            @{ Source = "dist/HangAll-$v-Setup.exe"; Name = "HangAll-$v-Setup.exe" }
+          )
+          New-Item -ItemType Directory -Force out | Out-Null
+          foreach ($file in $files) {
+            if (-not (Test-Path -LiteralPath $file.Source -PathType Leaf)) {
+              throw "Required release file is missing: $($file.Source)"
+            }
+            Copy-Item -LiteralPath $file.Source -Destination (Join-Path out $file.Name)
+          }
+          $hashes = Get-ChildItem -LiteralPath out -File |
+            Sort-Object Name |
+            ForEach-Object {
+              $hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+              "$hash  $($_.Name)"
+            }
+          Set-Content -LiteralPath out/SHA256SUMS.txt -Value $hashes -Encoding ascii
+          Get-ChildItem out
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: HangAll
+          path: out/*
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: HangAll
+          path: out
+
+      - name: Publish release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          files: out/*
+          generate_release_notes: true
+          body: |
+            ## 下载
+
+            - `HangAll-*-Setup.exe`：安装版，推荐使用。需要 .NET 8 Desktop Runtime。
+            - `HangAll-*-win-x64.exe`：框架依赖单文件版。需要 .NET 8 Desktop Runtime。
+            - `HangAll-*-win-x64-portable.exe`：便携版，不需要额外安装运行时。
+            - `SHA256SUMS.txt`：发布文件的 SHA256 校验值。
+
+            ## 说明
+
+            当前二进制尚未进行代码签名，Windows SmartScreen 可能显示警告。请先核对
+            `SHA256SUMS.txt`，再决定是否运行下载的文件。
+
+            Portable builds do not require the .NET 8 Desktop Runtime. The installer and
+            `win-x64` single-file build do. The current binaries are unsigned, so Windows
+            SmartScreen may warn; verify `SHA256SUMS.txt` before running them.
