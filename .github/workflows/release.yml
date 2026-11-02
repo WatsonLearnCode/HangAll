@@ -38,18 +38,32 @@ jobs:
         shell: pwsh
         run: |
           $v = if ($env:GITHUB_REF -like 'refs/tags/v*') { $env:GITHUB_REF.Substring(11) } else { '0.0.0' }
-          $files = @(
-            @{ Source = "dist/win-x64/HangAll.exe"; Name = "HangAll-$v-win-x64.exe" },
-            @{ Source = "dist/portable/HangAll.exe"; Name = "HangAll-$v-win-x64-portable.exe" },
-            @{ Source = "dist/HangAll-$v-Setup.exe"; Name = "HangAll-$v-Setup.exe" }
-          )
-          New-Item -ItemType Directory -Force out | Out-Null
-          foreach ($file in $files) {
-            if (-not (Test-Path -LiteralPath $file.Source -PathType Leaf)) {
-              throw "Required release file is missing: $($file.Source)"
-            }
-            Copy-Item -LiteralPath $file.Source -Destination (Join-Path out $file.Name)
+          $root = (Get-Location).Path
+          # Print what the build actually produced, so a name mismatch explains itself.
+          $produced = Get-ChildItem -Recurse -File dist -ErrorAction SilentlyContinue
+          Write-Host "::notice::v=$v, dist holds $($produced.Count) files"
+          foreach ($f in $produced) {
+            Write-Host ("produced: {0} ({1} MB)" -f $f.FullName.Substring($root.Length + 1), [math]::Round($f.Length / 1MB, 2))
           }
+
+          function Pick([string]$Preferred, [scriptblock]$Fallback, [string]$Label) {
+            if (Test-Path -LiteralPath $Preferred -PathType Leaf) { return Get-Item -LiteralPath $Preferred }
+            $hit = & $Fallback | Select-Object -First 1
+            if ($hit) { return $hit }
+            $listing = ($produced | ForEach-Object { $_.FullName.Substring($root.Length + 1) }) -join ', '
+            Write-Host "::error::$Label was not found under dist. dist contains: $listing"
+            throw "$Label was not found under dist"
+          }
+
+          $single = Pick 'dist/win-x64/HangAll.exe' { Get-ChildItem -Recurse -File dist -Filter HangAll.exe | Where-Object { $_.DirectoryName -notmatch 'portable' } } 'the x64 single-file build'
+          $portable = Pick 'dist/portable/HangAll.exe' { Get-ChildItem -Recurse -File dist -Filter HangAll.exe | Where-Object { $_.DirectoryName -match 'portable' } } 'the portable build'
+          $setup = Pick "dist/HangAll-$v-Setup.exe" { Get-ChildItem -Recurse -File dist -Filter '*Setup*.exe' } 'the installer'
+
+          New-Item -ItemType Directory -Force out | Out-Null
+          Copy-Item -LiteralPath $single.FullName -Destination "out/HangAll-$v-win-x64.exe"
+          Copy-Item -LiteralPath $portable.FullName -Destination "out/HangAll-$v-win-x64-portable.exe"
+          Copy-Item -LiteralPath $setup.FullName -Destination "out/HangAll-$v-Setup.exe"
+
           $hashes = Get-ChildItem -LiteralPath out -File |
             Sort-Object Name |
             ForEach-Object {
